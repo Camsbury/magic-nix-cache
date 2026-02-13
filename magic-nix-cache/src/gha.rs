@@ -90,21 +90,13 @@ impl GhaCache {
 
     pub async fn enqueue_paths(
         &self,
-        store: Arc<NixStore>,
+        _store: Arc<NixStore>,
         store_paths: Vec<StorePath>,
     ) -> Result<()> {
-        // FIXME: make sending the closure optional. We might want to
-        // only send the paths that have been built by the user, under
-        // the assumption that everything else is already in a binary
-        // cache.
-        // FIXME: compute_fs_closure_multi doesn't return a
-        // toposort, though it doesn't really matter for the GHA
-        // cache.
-        let closure = store
-            .compute_fs_closure_multi(store_paths, false, false, false)
-            .await?;
-
-        for p in closure {
+        // Intentionally do NOT expand to the full closure. We only upload the paths explicitly
+        // provided by the post-build hook / build event stream, i.e. the paths that were actually
+        // built in this workflow.
+        for p in store_paths {
             self.channel_tx
                 .send(Request::Upload(p))
                 .map_err(|_| Error::Internal("Cannot send upload message".to_owned()))?;
