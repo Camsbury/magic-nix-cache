@@ -11,6 +11,8 @@ fn main() {
         println!("cargo:rerun-if-changed=build/sched_cpucount_shim.c");
 
         cc::Build::new()
+            // musl's `cpu_set_t` is guarded behind GNU feature macros.
+            .define("_GNU_SOURCE", None)
             .file("build/sched_cpucount_shim.c")
             .compile("sched_cpucount_shim");
     }
