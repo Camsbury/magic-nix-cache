@@ -3315,6 +3315,7 @@ dependencies = [
  "attic-client",
  "attic-server",
  "axum 0.7.9",
+ "cc",
  "clap",
  "color-eyre",
  "daemonize",

@@ -65,3 +65,6 @@ detsys-ids-client = "0.6"
 version = "1.44.2"
 default-features = false
 features = ["fs", "macros", "process", "rt", "rt-multi-thread", "sync"]
+
+[build-dependencies]
+cc = "1"
